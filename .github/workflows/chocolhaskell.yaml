@@ -1,0 +1,81 @@
+name: chocolhaskell
+run-name: ${{ github.actor }}'s chocolhaskell
+on:
+  push:
+  pull_request:
+    branches-ignore:
+      - 'ga-ignore-'
+env:
+  REPO_LINK: "git@github.com:EpitechPromo2027/B-FUN-400-NAN-4-1-wolfram-baptiste.moreau.git"
+  EXECUTABLES: "wolfram"
+
+jobs:
+  check_coding_style:
+    name: check_coding_style
+    runs-on: ubuntu-latest
+    container: ghcr.io/epitech/coding-style-checker
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - run: |
+          lambdananas $(pwd) > coding-style-reports.log
+          my_errors=0
+          while read line; do
+            error_major=$(echo $line | cut -d ':' -f 3 | tr '\n' ' ' | tr -d ' ')
+            filename=$(echo $line | cut -d ':' -f 1)
+            error_line=$(echo $line | cut -d ':' -f 2)
+            error_type=$(echo $line | cut -d ':' -f 4)
+            final_error="$filename#L$error_line \n $error_code"
+            error_title="$error_major coding style error "
+            echo -e "::error file=$filename,line=$error_line,title=$error_title::$error_title$final_error"
+            my_errors=$((my_errors+1))
+          done < coding-style-reports.log
+          if [ ! $my_errors -eq 0 ]; then
+            exit 1
+          fi
+
+  check_program_compilation:
+    runs-on: ubuntu-latest
+    container: epitechcontent/epitest-docker
+    needs: check_coding_style
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Program Compilation
+        run: make
+        timeout-minutes: 2
+
+      - name: Cleaning Object Files
+        run: |
+          make clean
+          if [ ! $(find . -name '*.o' | wc -l) -eq 0 ]; then
+            exit 1
+          fi
+
+      - name: Binary Verification
+        run: |
+          IFS=','
+          read -a arr <<< ${{ env.EXECUTABLES }}
+          for exec in "${arr[@]}"
+          do
+              if [ ! -x $exec ]; then
+                  exit 1
+              fi
+          done
+
+  push_to_main_repo:
+    runs-on: ubuntu-latest
+    needs: check_program_compilation
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: pixta-dev/repository-mirroring-action@v1
+        with:
+          target_repo_url:
+            ${{ env.REPO_LINK }}
+          ssh_private_key:
+            ${{ secrets.MIRROR_KEY }}
