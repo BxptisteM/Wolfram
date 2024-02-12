@@ -6,22 +6,20 @@ cabal-version: 2.2
 
 name:           wolfram
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/wolfram#readme>
-homepage:       https://github.com/githubuser/wolfram#readme
-bug-reports:    https://github.com/githubuser/wolfram/issues
+description:    Please see the README on GitHub at <https://github.com/BxptisteM/Wolfram/blob/main/README.md>
+homepage:       https://github.com/github.com/BxptisteM#readme
+bug-reports:    https://github.com/github.com/BxptisteM/issues
 author:         Author name here
-maintainer:     example@example.com
-copyright:      2024 Author name here
+maintainer:     baptiste.moreau@epitech.eu
+copyright:      2024 Baptiste Moreau
 license:        BSD-3-Clause
 license-file:   LICENSE
 build-type:     Simple
-extra-source-files:
-    README.md
-    CHANGELOG.md
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/wolfram
+  location: https://github.com/github.com/BxptisteM
+  subdir: Wolfram
 
 library
   exposed-modules:
