@@ -1,3 +1,10 @@
+##
+## EPITECH PROJECT, 2024
+## Wolfram [WSL: Ubuntu]
+## File description:
+## Makefile
+##
+
 NAME = wolfram
 CC = stack build --stack-yaml stack.yaml
 SRC_DIR = ./src/

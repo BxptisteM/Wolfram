@@ -1,0 +1,5 @@
+./.stack-work/install/x86_64-linux/f118fb0a2cee02aa76bbf4db60f3b6fa9428d5bc7c924f9baf2cf823e6f587b4/9.2.5/bin/wolfram-exe:1: MAJOR:C-O1
+./.stack-work/install/x86_64-linux/f118fb0a2cee02aa76bbf4db60f3b6fa9428d5bc7c924f9baf2cf823e6f587b4/9.2.5/lib/x86_64-linux-ghc-9.2.5/libHSwolfram-0.1.0.0-5iVQa0jqe7M15WwpFBVvIg-ghc9.2.5.so:1: MAJOR:C-O1
+./.stack-work/install/x86_64-linux/f118fb0a2cee02aa76bbf4db60f3b6fa9428d5bc7c924f9baf2cf823e6f587b4/9.2.5/lib/x86_64-linux-ghc-9.2.5/wolfram-0.1.0.0-5iVQa0jqe7M15WwpFBVvIg/libHSwolfram-0.1.0.0-5iVQa0jqe7M15WwpFBVvIg.a:1: MAJOR:C-O1
+./Makefile:1: MINOR:C-G1
+./src/Lib.hs:1: MINOR:H-G1 # ./src/Lib.hs has a badly formatted Epitech header
