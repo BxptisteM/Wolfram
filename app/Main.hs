@@ -5,7 +5,12 @@
 -- Main
 -}
 
-module Main where
+module Main (main) where
+
+import System.Environment (getArgs)
+
 
 main :: IO ()
-main = putStrLn "Hello World!"
+main = do
+    args <- getArgs
+    print args
