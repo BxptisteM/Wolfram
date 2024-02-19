@@ -6,13 +6,16 @@
 ##
 
 NAME = wolfram
-CC = stack build --stack-yaml stack.yaml
+CC = stack
 SRC_DIR = ./src/
+
+BINARY_PATH = `stack path --local-install-root`/bin/$(NAME)-exe
 
 all: $(NAME)
 
 $(NAME):
-	@$(CC)
+	@$(CC) build
+	@cp $(BINARY_PATH) ./$(NAME)
 	@echo "Compilation done"
 
 clean:
@@ -20,6 +23,7 @@ clean:
 	@echo "[Delete] object files"
 
 fclean: clean
+	@rm -f $(NAME)
 	@echo "[Delete] $(NAME)"
 
 re: fclean all
