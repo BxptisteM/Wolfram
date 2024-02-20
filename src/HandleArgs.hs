@@ -7,7 +7,7 @@
 
 module HandleArgs (Args, checkArgs, parseArgs) where
 
-import Data.Maybe (isNothing, fromJust)
+import Data.Maybe (isJust, fromJust)
 import System.Exit (exitWith, ExitCode(ExitFailure))
 import Text.Read (readMaybe)
 
@@ -29,23 +29,15 @@ defaultArgs = Args {
 }
 
 checkArgs :: Maybe Args -> IO (Maybe Args)
-checkArgs Nothing = return Nothing
 checkArgs (Just args) =
-    if isNothing (rule args)
-    then do
-        putStrLn "Error: the rule is missing"
-        exitWith (ExitFailure 84)
-    else let ruleValue = fromJust (rule args) in
-        if ruleValue `elem` [30, 90, 110]
-        then return (Just args)
-        else do
-            putStrLn "Error: Invalid rule value. Allowed values are 30, 90, or 110."
-            exitWith (ExitFailure 84)
+    if isJust (rule args) && fromJust (rule args) `elem` [30, 90, 110]
+    then return (Just args)
+    else exitWithError
+checkArgs Nothing = exitWithError
 
 exitWithError :: IO (Maybe Args)
-exitWithError = do
-    putStrLn "Error: Invalid argument or value."
-    exitWith (ExitFailure 84)
+exitWithError = putStrLn "Error: Invalid argument or value."
+                >> exitWith (ExitFailure 84)
 
 parseArgs :: [String] -> IO (Maybe Args)
 parseArgs args = parseArgsHelper args defaultArgs
