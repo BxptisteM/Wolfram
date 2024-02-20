@@ -5,40 +5,71 @@
 -- HandleArgs
 -}
 
-module HandleArgs (Args, checkNbArgs, checkArgs, parseArgs) where
+module HandleArgs (Args, checkArgs, parseArgs) where
 
+import Data.Maybe (isNothing, fromJust)
 import System.Exit (exitWith, ExitCode(ExitFailure))
+import Text.Read (readMaybe)
 
-data Args = Args { rule :: Maybe Int, start :: Maybe Int, nbLines :: Maybe Int, window :: Maybe Int, move :: Maybe Int } deriving (Show)
+data Args = Args {
+    rule :: Maybe Int,
+    start :: Maybe Int,
+    nbLines :: Maybe Int,
+    window :: Maybe Int,
+    move :: Maybe Int
+} deriving (Show)
 
-checkNbArgs :: [String] -> IO ()
-checkNbArgs args
-    | null args = exitWith (ExitFailure 84)
-    | otherwise = return ()
-
-checkArgs :: Maybe Args -> IO (Maybe Args)
-checkArgs Nothing = exitWith (ExitFailure 84)
-checkArgs (Just args) = return (Just args)
-
-parseArgs :: [String] -> IO (Maybe Args)
-parseArgs args = do
-    let ruleValue = fmap read $ getArgValue "--rule" args :: Maybe Int
-    case ruleValue of
-        Just r -> if r `elem` [30, 90, 110]
-            then return $ Just $ getValues args
-            else exitWith (ExitFailure 84)
-        Nothing -> exitWith (ExitFailure 84)
-
-getValues :: [String] -> Args
-getValues args = Args {
-    rule = fmap read $ getArgValue "--rule" args,
-    start = Just $ maybe 0 read (getArgValue "--start" args),
-    nbLines = fmap read $ getArgValue "--lines" args,
-    window = Just $ maybe 80 read (getArgValue "--window" args),
-    move = fmap read $ getArgValue "--move" args
+defaultArgs :: Args
+defaultArgs = Args {
+    rule = Nothing,
+    start = Just 0,
+    nbLines = Nothing,
+    window = Just 80,
+    move = Just 0
 }
 
-getArgValue :: String -> [String] -> Maybe String
-getArgValue argName args = case dropWhile (/= argName) args of
-    (_:val:_) -> Just val
-    _ -> Nothing
+checkArgs :: Maybe Args -> IO (Maybe Args)
+checkArgs Nothing = return Nothing
+checkArgs (Just args) =
+    if isNothing (rule args)
+    then do
+        putStrLn "Error: the rule is missing"
+        exitWith (ExitFailure 84)
+    else let ruleValue = fromJust (rule args) in
+        if ruleValue `elem` [30, 90, 110]
+        then return (Just args)
+        else do
+            putStrLn "Error: Invalid rule value. Allowed values are 30, 90, or 110."
+            exitWith (ExitFailure 84)
+
+exitWithError :: IO (Maybe Args)
+exitWithError = do
+    putStrLn "Error: Invalid argument or value."
+    exitWith (ExitFailure 84)
+
+parseArgs :: [String] -> IO (Maybe Args)
+parseArgs args = parseArgsHelper args defaultArgs
+
+parseArgsHelper :: [String] -> Args -> IO (Maybe Args)
+parseArgsHelper [] args = return $ Just args
+parseArgsHelper ("--rule":val:rest) args =
+    case readMaybe val :: Maybe Int of
+        Just n -> parseArgsHelper rest args{rule = Just n}
+        Nothing -> exitWithError
+parseArgsHelper ("--start":val:rest) args =
+    case readMaybe val :: Maybe Int of
+        Just n | n >= 0 -> parseArgsHelper rest args{start = Just n}
+        _ -> exitWithError
+parseArgsHelper ("--lines":val:rest) args =
+    case readMaybe val :: Maybe Int of
+        Just n | n >= 0 -> parseArgsHelper rest args{nbLines = Just n}
+        _ -> exitWithError
+parseArgsHelper ("--window":val:rest) args =
+    case readMaybe val :: Maybe Int of
+        Just n | n >= 0 -> parseArgsHelper rest args{window = Just n}
+        _ -> exitWithError
+parseArgsHelper ("--move":val:rest) args =
+    case readMaybe val :: Maybe Int of
+        Just n -> parseArgsHelper rest args{move = Just n}
+        _ -> exitWithError
+parseArgsHelper _ _ = exitWithError

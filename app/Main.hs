@@ -7,14 +7,19 @@
 
 module Main (main) where
 
-import HandleArgs (checkNbArgs, checkArgs, parseArgs)
+import HandleArgs (parseArgs, checkArgs)
 import System.Environment (getArgs)
 
 main :: IO ()
 main = do
-    args <- getArgs
-    checkNbArgs args
-    parsedArgs <- parseArgs args
-    checkedArgs <- checkArgs parsedArgs
-    case checkedArgs of
-        Just a -> putStrLn $ "Arguments validés: " ++ show a
+    commandLineArgs <- getArgs
+    parsedArgs <- parseArgs commandLineArgs
+    case parsedArgs of
+        Just args -> do
+            validArgs <- checkArgs (Just args)
+            case validArgs of
+                Just _ -> do
+                    putStrLn "Parsed and checked arguments:"
+                    print args
+                Nothing -> return ()
+        Nothing -> return ()
