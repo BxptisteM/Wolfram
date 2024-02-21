@@ -13,13 +13,8 @@ import System.Environment (getArgs)
 main :: IO ()
 main = do
     commandLineArgs <- getArgs
-    parsedArgs <- parseArgs commandLineArgs
-    case parsedArgs of
-        Just args -> do
-            validArgs <- checkArgs (Just args)
-            case validArgs of
-                Just _ -> do
-                    putStrLn "Parsed and checked arguments:"
-                    print args
-                Nothing -> return ()
-        Nothing -> return ()
+    maybeParsedArgs <- parseArgs commandLineArgs
+    validArgs <- checkArgs maybeParsedArgs
+    case validArgs of
+      Just args -> print args
+      Nothing -> return ()

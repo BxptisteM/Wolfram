@@ -11,15 +11,9 @@ import Data.Maybe (isJust, fromJust)
 import System.Exit (exitWith, ExitCode(ExitFailure))
 import Text.Read (readMaybe)
 
-data Args = Args {
-    rule :: Maybe Int,
-    start :: Maybe Int,
-    nbLines :: Maybe Int,
-    window :: Maybe Int,
-    move :: Maybe Int
-} deriving (Show)
+data Args = Args {rule :: Maybe Int, start :: Maybe Int, nbLines :: Maybe Int, window :: Maybe Int, move :: Maybe Int} deriving (Show)
 
-defaultArgs :: Args
+defaultArgs::Args
 defaultArgs = Args {
     rule = Nothing,
     start = Just 0,
@@ -28,21 +22,21 @@ defaultArgs = Args {
     move = Just 0
 }
 
-checkArgs :: Maybe Args -> IO (Maybe Args)
+checkArgs::Maybe Args -> IO (Maybe Args)
 checkArgs (Just args) =
     if isJust (rule args) && fromJust (rule args) `elem` [30, 90, 110]
     then return (Just args)
     else exitWithError
 checkArgs Nothing = exitWithError
 
-exitWithError :: IO (Maybe Args)
+exitWithError::IO (Maybe Args)
 exitWithError = putStrLn "Error: Invalid argument or value."
                 >> exitWith (ExitFailure 84)
 
-parseArgs :: [String] -> IO (Maybe Args)
+parseArgs::[String] -> IO (Maybe Args)
 parseArgs args = parseArgsHelper args defaultArgs
 
-parseArgsHelper :: [String] -> Args -> IO (Maybe Args)
+parseArgsHelper::[String] -> Args -> IO (Maybe Args)
 parseArgsHelper [] args = return $ Just args
 parseArgsHelper ("--rule":val:rest) args =
     case readMaybe val :: Maybe Int of
