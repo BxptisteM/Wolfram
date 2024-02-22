@@ -7,14 +7,27 @@
 
 module Main (main) where
 
-import HandleArgs (parseArgs, checkArgs)
 import System.Environment (getArgs)
+import HandleArgs (Args, parseArgs, checkArgs)
+import Rules (RuleTable, ruleTable)
+import Lib (toBinArray)
 
 main :: IO ()
 main = do
-    commandLineArgs <- getArgs
-    maybeParsedArgs <- parseArgs commandLineArgs
-    validArgs <- checkArgs maybeParsedArgs
-    case validArgs of
-      Just args -> print args
-      Nothing -> return ()
+  args <- getArgs
+  parsedArgs <- parseArgs args
+  checkedArgs <- checkArgs parsedArgs
+
+  case checkedArgs of
+    Just args -> do
+      let ruleValue = maybe 30 id (rule args) -- Correction ici pour utiliser 'rule' correctement
+      let binaryArray = toBinArray ruleValue
+
+      putStrLn "Binary Array:"
+      print binaryArray
+
+      let rules = ruleTable binaryArray
+
+      putStrLn "Rule Table:"
+      print rules
+    Nothing -> putStrLn "No valid arguments provided."

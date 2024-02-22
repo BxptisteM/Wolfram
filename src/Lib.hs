@@ -5,9 +5,12 @@
 -- Lib
 -}
 
-module Lib
-    ( someFunc
-    ) where
+module Lib (toBinArray) where
 
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
+toBinArray::Int -> [Int]
+toBinArray n = take (8 - length bin) (repeat 0) ++ bin
+  where bin = reverse . toBin $ n
+
+toBin::Int -> [Int]
+toBin 0 = []
+toBin n = n `mod` 2 : toBin (n `div` 2)

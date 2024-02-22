@@ -25,6 +25,7 @@ library
   exposed-modules:
       HandleArgs
       Lib
+      Rules
   other-modules:
       Paths_wolfram
   autogen-modules:
