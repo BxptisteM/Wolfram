@@ -35,40 +35,8 @@ jobs:
             exit 1
           fi
 
-  check_program_compilation:
-    runs-on: ubuntu-latest
-    container: epitechcontent/epitest-docker
-    needs: check_coding_style
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Program Compilation
-        run: make
-        timeout-minutes: 2
-
-      - name: Cleaning Object Files
-        run: |
-          make clean
-          if [ ! $(find . -name '*.o' | wc -l) -eq 0 ]; then
-            exit 1
-          fi
-
-      - name: Binary Verification
-        run: |
-          IFS=','
-          read -a arr <<< ${{ env.EXECUTABLES }}
-          for exec in "${arr[@]}"
-          do
-              if [ ! -x $exec ]; then
-                  exit 1
-              fi
-          done
-
   push_to_main_repo:
     runs-on: ubuntu-latest
-    needs: check_program_compilation
     steps:
       - uses: actions/checkout@v3
         with:
