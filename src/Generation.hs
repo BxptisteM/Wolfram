@@ -52,5 +52,4 @@ positiveGeneration move window nbLines countLines start ruleTbl =
 
 negativeGeneration::Int -> Int -> Maybe Int -> Int -> Int -> RuleTable -> IO ()
 negativeGeneration move window nbLines countLines start ruleTbl =
-    generateLists window nbLines countLines start ruleTbl (repeat 0)
-    (replicate ((abs move) -1) 0 ++ [1] ++ repeat 0)
+    generateLists window nbLines countLines start ruleTbl (replicate ((abs move) -1) 0 ++ [1] ++ repeat 0) (repeat 0)
