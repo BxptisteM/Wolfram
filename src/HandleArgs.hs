@@ -5,7 +5,7 @@
 -- HandleArgs
 -}
 
-module HandleArgs (Args, checkArgs, parseArgs) where
+module HandleArgs (Args(..), checkArgs, parseArgs, getRule, getMove, getWindowSize, getStart, getNbLines) where
 
 import Data.Maybe (isJust, fromJust)
 import System.Exit (exitWith, ExitCode(ExitFailure))
@@ -59,3 +59,18 @@ parseArgsHelper ("--move":val:rest) args =
         Just n -> parseArgsHelper rest args{move = Just n}
         _ -> exitWithError
 parseArgsHelper _ _ = exitWithError
+
+getRule::Args -> Maybe Int
+getRule args = rule args
+
+getMove::Args -> Int
+getMove args = fromJust (move args)
+
+getWindowSize::Args -> Int
+getWindowSize args = fromJust (window args)
+
+getStart::Args -> Int
+getStart args = fromJust (start args)
+
+getNbLines::Args -> Maybe Int
+getNbLines args = nbLines args

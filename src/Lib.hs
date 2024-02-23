@@ -5,7 +5,7 @@
 -- Lib
 -}
 
-module Lib (toBinArray) where
+module Lib (toBinArray, convertIC) where
 
 toBinArray::Int -> [Int]
 toBinArray n = take (8 - length bin) (repeat 0) ++ bin
@@ -14,3 +14,8 @@ toBinArray n = take (8 - length bin) (repeat 0) ++ bin
 toBin::Int -> [Int]
 toBin 0 = []
 toBin n = n `mod` 2 : toBin (n `div` 2)
+
+
+convertIC::[Int] -> [Char]
+convertIC [] = []
+convertIC (x:xs) = if x == 0 then ' ' : convertIC xs else '*' : convertIC xs

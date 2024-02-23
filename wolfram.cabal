@@ -23,9 +23,10 @@ source-repository head
 
 library
   exposed-modules:
+      Generation
       HandleArgs
+      HandleRules
       Lib
-      Rules
   other-modules:
       Paths_wolfram
   autogen-modules:

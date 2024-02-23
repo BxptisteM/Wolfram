@@ -8,26 +8,21 @@
 module Main (main) where
 
 import System.Environment (getArgs)
-import HandleArgs (Args, parseArgs, checkArgs)
-import Rules (RuleTable, ruleTable)
+import HandleArgs (parseArgs, getRule, getMove, getWindowSize, getStart, getNbLines, Args(..))
+import HandleRules (ruleTable)
 import Lib (toBinArray)
+import Generation (positiveGeneration, negativeGeneration)
 
 main :: IO ()
-main = do
-  args <- getArgs
-  parsedArgs <- parseArgs args
-  checkedArgs <- checkArgs parsedArgs
+main = getArgs >>= parseArgs >>= maybe (return ()) startWolfram
 
-  case checkedArgs of
-    Just args -> do
-      let ruleValue = maybe 30 id (rule args) -- Correction ici pour utiliser 'rule' correctement
-      let binaryArray = toBinArray ruleValue
-
-      putStrLn "Binary Array:"
-      print binaryArray
-
-      let rules = ruleTable binaryArray
-
-      putStrLn "Rule Table:"
-      print rules
-    Nothing -> putStrLn "No valid arguments provided."
+startWolfram :: Args -> IO ()
+startWolfram args = case getRule args of
+    Just r -> let binaryRuleArray = toBinArray r
+                  ruleTbl = ruleTable binaryRuleArray
+              in if getMove args == 0 || getMove args > 0
+                 then positiveGeneration (getMove args) (getWindowSize args)
+                    (getNbLines args) 0 (getStart args) ruleTbl
+                 else negativeGeneration (getMove args) (getWindowSize args)
+                    (getNbLines args) 0 (getStart args) ruleTbl
+    Nothing -> return ()
