@@ -67,8 +67,7 @@ getMove::Args -> Int
 getMove args = fromJust (move args)
 
 getWindowSize::Args -> Int
-getWindowSize args = fromJust (window args)
-
+getWindowSize args = maybe 80 (`div` 2) (window args)
 getStart::Args -> Int
 getStart args = fromJust (start args)
 
