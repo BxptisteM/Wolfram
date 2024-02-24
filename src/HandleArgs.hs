@@ -21,12 +21,11 @@ defaultArgs = Args {
     window = Just 80,
     move = Just 0
 }
-
-checkArgs::Maybe Args -> IO (Maybe Args)
+checkArgs :: Maybe Args -> IO (Maybe Args)
 checkArgs (Just args) =
-    if isJust (rule args) && fromJust (rule args) `elem` [30, 90, 110]
-    then return (Just args)
-    else exitWithError
+    case rule args of
+        Just r | r `elem` [30, 90, 110] -> return (Just args)
+        _ -> exitWithError
 checkArgs Nothing = exitWithError
 
 exitWithError::IO (Maybe Args)

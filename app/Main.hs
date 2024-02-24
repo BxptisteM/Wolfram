@@ -8,13 +8,13 @@
 module Main (main) where
 
 import System.Environment (getArgs)
-import HandleArgs (parseArgs, getRule, getMove, getWindowSize, getStart, getNbLines, Args(..))
+import HandleArgs (checkArgs, parseArgs, getRule, getMove, getWindowSize, getStart, getNbLines, Args(..))
 import HandleRules (ruleTable)
 import Lib (toBinArray)
 import Generation (positiveGeneration, negativeGeneration)
 
 main :: IO ()
-main = getArgs >>= parseArgs >>= maybe (return ()) startWolfram
+main = getArgs >>= parseArgs >>= checkArgs >>= maybe (return ()) startWolfram
 
 startWolfram :: Args -> IO ()
 startWolfram args = case getRule args of
