@@ -7,7 +7,7 @@
 
 module HandleArgs (Args(..), checkArgs, parseArgs, getRule, getMove, getWindowSize, getStart, getNbLines) where
 
-import Data.Maybe (isJust, fromJust)
+import Data.Maybe (fromJust)
 import System.Exit (exitWith, ExitCode(ExitFailure))
 import Text.Read (readMaybe)
 
